@@ -2,9 +2,6 @@
 # Project exclude paths
 /node_modules/
 /docker-config/postgres-volume/
-.idea/vcs.xml
-.idea/modules.xml
-.idea/hl-backend.iml
-.idea/codeStyles
+.idea/
 yarn-error.log
 yarn.lock

@@ -1,0 +1,21 @@
+version: '3'
+services:
+  database:
+    image: 'postgres'
+    container_name: 'hl-postgres-container'
+    environment:
+      - POSTGRES_PASSWORD=hl
+      - POSTGRES_USER=hl
+      - POSTGRES_DB=hl
+    volumes:
+      - ./postgres-volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    network_mode: "bridge"
+  adminer:
+    image: adminer
+    container_name: 'hl-postgres-adminer'
+    restart: always
+    ports:
+      - 8080:8080
+    network_mode: "bridge"

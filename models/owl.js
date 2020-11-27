@@ -1,23 +1,42 @@
 const sequelize = require('../utils/db')
-const User = require("./user");
+const User = require('./user')
 const {Model, DataTypes} = require('sequelize')
 
-class Message extends Model{}
-Message.init({
+class Owl extends Model {}
+Owl.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    user_id: {
+    receptor_id: {
         type: DataTypes.UUID,
         references: {
             model: User,
             key: 'id'
         }
     },
-    chat_area: DataTypes.STRING,
+    sender_id: {
+        type: DataTypes.UUID,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    },
+    title: DataTypes.STRING,
     message: DataTypes.TEXT,
+    read: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    favorite: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
@@ -25,22 +44,10 @@ Message.init({
     updatedAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
-    },
-    hidden: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    highlighted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    deleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
     }
 }, {
     sequelize,
-    modelName: 'Message'
+    modelName: 'Owl'
 })
 
-module.exports = Message
+module.exports = Owl

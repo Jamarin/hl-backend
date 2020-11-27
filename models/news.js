@@ -1,14 +1,17 @@
 const sequelize = require('../utils/db')
-const User = require("./user");
 const {Model, DataTypes} = require('sequelize')
+const User = require('./user')
 
-class Message extends Model{}
-Message.init({
+class News extends Model {}
+News.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
+    title: DataTypes.STRING,
+    extract: DataTypes.STRING,
+    full_text: DataTypes.TEXT,
     user_id: {
         type: DataTypes.UUID,
         references: {
@@ -16,8 +19,18 @@ Message.init({
             key: 'id'
         }
     },
-    chat_area: DataTypes.STRING,
-    message: DataTypes.TEXT,
+    source_url: DataTypes.STRING,
+    source_name: DataTypes.STRING,
+    via_url: DataTypes.STRING,
+    via_name: DataTypes.STRING,
+    draft: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
+    featured: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
@@ -26,21 +39,9 @@ Message.init({
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     },
-    hidden: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    highlighted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    deleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    }
 }, {
     sequelize,
-    modelName: 'Message'
+    modelName: 'News'
 })
 
-module.exports = Message
+module.exports = News

@@ -1,5 +1,6 @@
 const UserService = require('./user')
 const {generateAccessToken} = require("../middlewares/jwt");
+const RoleService = require('./role')
 
 const login = async (user) => {
     let bdUser = await UserService.getUserByEmail(user.email)
@@ -8,6 +9,7 @@ const login = async (user) => {
             status: 200,
             data: {
                 ...bdUser,
+                role: await RoleService.getRoleById(bdUser.role_id),
                 token: generateAccessToken(bdUser)
             }
         }

@@ -1,5 +1,6 @@
-const sequelize = require('../db')
+const sequelize = require('../utils/db')
 const {Model, DataTypes} = require('sequelize')
+const Role = require('./role')
 
 class User extends Model {}
 User.init({
@@ -8,11 +9,26 @@ User.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
+    numeric_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        unique: true
+    },
     username: DataTypes.STRING,
+    name: DataTypes.STRING,
     email: DataTypes.STRING,
     house: DataTypes.ENUM('gryffindor', 'ravenclaw', 'slytherin', 'hufflepuff'),
     password: DataTypes.STRING,
-    role: DataTypes.ENUM('admin', 'moderator', 'user'),
+    birthDate: DataTypes.DATEONLY,
+    description: DataTypes.TEXT,
+    patronus: DataTypes.STRING,
+    role_id: {
+        type: DataTypes.UUID,
+        references: {
+            model: Role,
+            key: 'id'
+        }
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW

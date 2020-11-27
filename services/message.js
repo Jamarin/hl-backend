@@ -32,10 +32,17 @@ const getAllMessages = async (chat) => {
     let messageList = []
     for (let i = 0; i < dbMessages.length; i++)  {
         let message = dbMessages[i].dataValues
+        let bdAuthor = await UserService.getUserById(message.user_id)
         messageList.push({
             message: message.message,
-            author: await UserService.getUsernameById(message.user_id),
-            id: message.id
+            author: {
+                username: bdAuthor.username,
+                house: bdAuthor.house,
+                id: bdAuthor.id
+            },
+            id: message.id,
+            hidden: message.hidden,
+            highlighted: message.highlighted
         })
     }
 
@@ -53,11 +60,20 @@ const getMessageById = async (id) => {
     })
 }
 
-const hideMessage = async (id) => {
+const toggleHideMessage = async (id, currentStatus) => {
     await Message.update(
-        {hidden: true},
+        {hidden: !currentStatus},
         {where: {id: id}}
         )
+    let message = await getMessageById(id)
+    return message.chat_area
+}
+
+const toggleHighlightMessage = async (id, currentStatus) => {
+    await Message.update(
+        {highlighted: !currentStatus},
+        {where: {id: id}}
+    )
     let message = await getMessageById(id)
     return message.chat_area
 }
@@ -65,5 +81,6 @@ const hideMessage = async (id) => {
 module.exports = {
     createMessage,
     getAllMessages,
-    hideMessage
+    toggleHideMessage,
+    toggleHighlightMessage
 }

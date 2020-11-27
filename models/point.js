@@ -1,14 +1,16 @@
 const sequelize = require('../utils/db')
-const User = require("./user");
 const {Model, DataTypes} = require('sequelize')
+const User = require('./user')
 
-class Message extends Model{}
-Message.init({
+class Point extends Model {}
+Point.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
+    event: DataTypes.STRING,
+    value: DataTypes.INTEGER,
     user_id: {
         type: DataTypes.UUID,
         references: {
@@ -16,8 +18,13 @@ Message.init({
             key: 'id'
         }
     },
-    chat_area: DataTypes.STRING,
-    message: DataTypes.TEXT,
+    granted_by: {
+        type: DataTypes.UUID,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
@@ -25,22 +32,10 @@ Message.init({
     updatedAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
-    },
-    hidden: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    highlighted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    deleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
     }
 }, {
     sequelize,
-    modelName: 'Message'
+    modelName: 'Point'
 })
 
-module.exports = Message
+module.exports = Point

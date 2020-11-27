@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const MessageService = require('../services/message')
 const UserService = require('../services/user')
-const {getIO} = require('../socket-config')
+const {getIO} = require('../utils/socket-config')
 
 router.get('/all/:chat', async (req, res) => {
     let response = await MessageService.getAllMessages(req.params.chat)
@@ -11,20 +11,32 @@ router.get('/all/:chat', async (req, res) => {
 
 router.post('/send', async (req, res) => {
     let message = await MessageService.createMessage(req.body.message)
-    let sendMessage = {
+    let bdAuthor = await UserService.getUserById(message.user_id)
+    let sentMessage = {
         message: message.message,
-        author: await UserService.getUsernameById(message.user_id),
+        author: {
+            username: bdAuthor.username,
+            house: bdAuthor.house,
+            id: bdAuthor.id
+        },
         id: message.id,
         chat: message.chat_area
     }
-    getIO().emit(`MESSAGE_${sendMessage.chat}`, sendMessage)
-    res.status(200).send(sendMessage)
+    getIO().emit(`MESSAGE_${sentMessage.chat}`, sentMessage)
+    res.status(200).send(sentMessage)
 })
 
-router.put('/hide', async (req, res) => {
-    let chat = await MessageService.hideMessage(req.body.id)
+router.put('/toggle-hide', async (req, res) => {
+    let chat = await MessageService.toggleHideMessage(req.body.id, req.body.currentStatus)
     let response = await MessageService.getAllMessages(chat)
-    getIO().emit(`MESSAGE_${chat}`, response)
+    getIO().emit(`UPDATE_${chat}`, response.data)
+    res.status(200).send(response)
+})
+
+router.put('/toggle-highlight', async (req, res) => {
+    let chat = await MessageService.toggleHighlightMessage(req.body.id, req.body.currentStatus)
+    let response = await MessageService.getAllMessages(chat)
+    getIO().emit(`UPDATE_${chat}`, response.data)
     res.status(200).send(response)
 })
 

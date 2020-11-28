@@ -1,4 +1,11 @@
 version: '3'
+networks:
+  internal_UJJigBWx:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24
+      driver: default
 services:
   database:
     image: 'postgres'
@@ -11,7 +18,9 @@ services:
       - ./postgres-volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    network_mode: "bridge"
+    networks:
+      internal_UJJigBWx:
+        ipv4_address: 172.16.238.3
   adminer:
     image: adminer
     container_name: 'hl-postgres-adminer'
@@ -19,3 +28,16 @@ services:
     ports:
       - 8080:8080
     network_mode: "bridge"
+  server:
+    depends_on:
+      - database
+    image: 'docker-config_server'
+    container_name: 'hl-backend'
+    build:
+      context: ../
+      dockerfile: docker-config/Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      internal_UJJigBWx:
+        ipv4_address: 172.16.238.2

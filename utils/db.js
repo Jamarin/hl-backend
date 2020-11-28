@@ -1,7 +1,7 @@
 const {Sequelize} = require('sequelize')
 
 const sequelize = new Sequelize('hl', 'hl', 'hl', {
-    host: '127.0.0.1',
+    host: '172.16.238.3',
     dialect: 'postgres',
     pool: {
         max: 5,

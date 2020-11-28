@@ -7,4 +7,9 @@ router.get('/show/all/', async (req, res) => {
     res.status(response.status).send(response.data)
 })
 
+router.get('/all/', async (req, res) => {
+    let response = await NewsService.getAllNews()
+    res.status(response.status).send(response.data)
+})
+
 module.exports = router
